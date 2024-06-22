@@ -4,6 +4,12 @@ import clsx from "clsx";
 import styles from "./CustomInputNumber.module.scss";
 import LongPressDiv from "@/components/atomics/LongPressDiv";
 
+export const testIds = {
+  input: "custom-input-number-input-test-id",
+  incrementButton: "custom-input-number-increment-button-test-id",
+  decrementButton: "custom-input-number-decrement-button-test-id",
+};
+
 interface CustomInputNumberProps extends InputHTMLAttributes<HTMLInputElement> {
   max?: number;
   min?: number;
@@ -59,12 +65,22 @@ const CustomInputNumber: React.FC<CustomInputNumberProps> = ({ ...rest }) => {
       newValue = max;
     }
     setInputValue(newValue);
+    rest?.onChange &&
+      rest.onChange({
+        ...event,
+        target: {
+          ...event.target,
+          name: rest?.name || "",
+          value: `${newValue}`,
+        },
+      });
   };
 
   return (
     <div className={styles.customInputWrap}>
       <LongPressDiv onLongPress={handleDecrement}>
         <button
+          data-testid={testIds.decrementButton}
           className={clsx([
             styles.controlButton,
             {
@@ -78,6 +94,7 @@ const CustomInputNumber: React.FC<CustomInputNumberProps> = ({ ...rest }) => {
         </button>
       </LongPressDiv>
       <input
+        data-testid={testIds.input}
         ref={inputRef}
         type="number"
         className={styles.input}
@@ -87,6 +104,7 @@ const CustomInputNumber: React.FC<CustomInputNumberProps> = ({ ...rest }) => {
       />
       <LongPressDiv onLongPress={handleIncrement}>
         <button
+          data-testid={testIds.incrementButton}
           className={clsx([
             styles.controlButton,
             {
