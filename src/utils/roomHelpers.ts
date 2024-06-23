@@ -1,22 +1,22 @@
-interface GuestDescription {
+export interface GuestDescription {
   adult: number;
   child: number;
 }
 
-interface RoomDescription {
+export interface RoomDescription {
   roomPrice: number;
   adultPrice: number;
   childPrice: number;
   capacity: number;
 }
 
-interface RoomDetail {
+export interface RoomDetail {
   adult: number;
   child: number;
   price: number;
 }
 
-interface DpCell {
+export interface DpCell {
   adult: number;
   child: number;
   price: number;

@@ -7,7 +7,7 @@ const __dirname = path.dirname(__filename);
 
 const nextConfig = {
   sassOptions: {
-    prependData: `@import "@/styles/_variable.scss";`,
+    includePaths: [path.join(__dirname, 'styles')],
   },
   experimental: {
     forceSwcTransforms: true,

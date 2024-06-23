@@ -1,0 +1,50 @@
+@import '@/styles/variables.module.scss';
+
+.roomAllocationWrap {
+  display: flex;
+  flex-direction: column;
+  width: 500px;
+  padding: $gap3;
+}
+
+.roomAllocationHeader {
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: $text;
+}
+
+.sectionWrap {
+  padding-bottom: $gap3;
+  margin-bottom: $gap3;
+  border-style: solid;
+  border-color: $border;
+  border-bottom-width: 2px;
+}
+
+.sectionHeader {
+  font-weight: 500;
+  font-size: 1.1rem;
+  color: $text;
+  margin-bottom: $gap3;
+}
+
+.sectionInputArea {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $gap2;
+}
+
+.inputAreaLeft {
+  display: flex;
+  flex-direction: column;
+}
+
+.leftLabel {
+  color: $text;
+}
+
+.leftSpan {
+  color: $text-lighter;
+}

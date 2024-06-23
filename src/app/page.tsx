@@ -1,23 +1,24 @@
 "use client";
-import CustomInputNumber from "@/components/molecules/CustomInputNumber";
+import RoomAllocation from "@/components/organisms/RoomAllocation";
+import { getDefaultRoomAllocation } from "@/utils/roomHelpers";
 import { useState } from "react";
 
+const guestDescription = { adult: 7, child: 3 };
+
+const roomDescriptions = [
+  { roomPrice: 2000, adultPrice: 200, childPrice: 100, capacity: 4 },
+  { roomPrice: 2000, adultPrice: 200, childPrice: 100, capacity: 4 },
+  { roomPrice: 2000, adultPrice: 400, childPrice: 200, capacity: 2 },
+  { roomPrice: 2000, adultPrice: 400, childPrice: 200, capacity: 2 },
+];
+
 export default function Home() {
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setValue(e.target.value);
-  const onBlur = (e: React.FocusEvent<HTMLInputElement>) => console.log(e);
-  const [value, setValue] = useState("0");
-  const [max, setMax] = useState(100);
+  const [guest, setGuest] = useState(guestDescription);
+  const [rooms, setRooms] = useState(getDefaultRoomAllocation(guestDescription, roomDescriptions))
   return (
     <main className="flex min-h-screen flex-col items-center justify-between">
       <div className="w-500px h-full bg-white">
-        <CustomInputNumber
-          value={value}
-          max={max}
-          min={0}
-          onChange={onChange}
-          onBlur={onBlur}
-        ></CustomInputNumber>
+        <RoomAllocation guest={guest} rooms={rooms} />
       </div>
     </main>
   );

@@ -1,0 +1,21 @@
+$border: #e5e5e5;
+$input-border: #c5c5c5;
+$primary: #3eb1f4;
+$disabled: #dadada;
+$text: #333;
+$text-lighter: #9b9a9a;
+$gap1: 4px;
+$gap2: 8px;
+$gap3: 16px;
+
+:export {
+  border: $border;
+  inputBorder: $border;
+  primary: $primary;
+  disabled: $disabled;
+  text: $text;
+  textLighter: $text-lighter;
+  gap1: $gap1;
+  gap2: $gap2;
+  gap3: $gap3;
+}
