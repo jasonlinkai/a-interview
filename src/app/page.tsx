@@ -2,18 +2,13 @@
 import RoomAllocation from "@/components/organisms/RoomAllocation";
 import { getDefaultRoomAllocation } from "@/utils/roomHelpers";
 import { useState } from "react";
+import { testData } from "@/data/roomAllocation";
 
-const guestDescription = { adult: 7, child: 3 };
-
-const roomDescriptions = [
-  { id: 1, roomPrice: 2000, adultPrice: 200, childPrice: 100, capacity: 4 },
-  { id: 2, roomPrice: 2000, adultPrice: 200, childPrice: 100, capacity: 4 },
-  { id: 3, roomPrice: 2000, adultPrice: 400, childPrice: 200, capacity: 2 },
-  { id: 4, roomPrice: 2000, adultPrice: 400, childPrice: 200, capacity: 2 },
-];
+const guestDescription = testData[0].input.guest;
+const roomDescriptions = testData[0].input.rooms;
 
 export default function Home() {
-  const [guest, setGuest] = useState(guestDescription);
+  const [guest] = useState(guestDescription);
   const [rooms, setRooms] = useState(getDefaultRoomAllocation(guestDescription, roomDescriptions))
   return (
     <main className="flex min-h-screen flex-col items-center justify-between">

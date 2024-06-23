@@ -7,7 +7,10 @@ import {
 } from "@/utils/roomHelpers";
 import CustomInputNumber from "@/components/molecules/CustomInputNumber";
 
-export const testIds = {};
+export const testIds = {
+  header: 'room_allocation_header',
+  detail: 'room_allocation_detail'
+}
 
 interface RoomAllocationProps {
   guest: GuestDescription;
@@ -61,22 +64,23 @@ const RoomAllocation: React.FC<RoomAllocationProps> = ({
   }, [unassingedAdult, unassingedChild]);
 
   const disableAllIncrement = useMemo(() => {
-    return totalGuest === assingedGuest;
+    return totalGuest <= assingedGuest;
   }, [totalGuest, assingedGuest]);
 
   return (
     <div className={styles.roomAllocationWrap}>
-      <h3 className={styles.roomAllocationHeader}>
-        住客人數：{totalAdult}位大人，{totalChild}位小孩 / {rooms.length}房
+      <h3 className={styles.roomAllocationHeader} data-testid={testIds.header}>
+        {`住客人數：${totalAdult}位大人，${totalChild}位小孩 / ${rooms.length}房`}
       </h3>
-      <div className={styles.roomAllocationDetails}>
-        尚未分配人數：{unassingedAdult}位大人，{unassingedChild}位小孩 /{" "}
-        {rooms.length}房
+      <div className={styles.roomAllocationDetails} data-testid={testIds.detail}>
+        {`尚未分配人數：${unassingedAdult}位大人，${unassingedChild}位小孩 / ${rooms.length}房`}
       </div>
       {rooms.map((room, i) => {
         const { id, capacity, adult, child } = room;
         const isTail = rooms.length === i + 1;
-        const isRoomFull = adult + child > capacity;
+        const isRoomFull = adult + child >= capacity || adult >= capacity || child >= capacity;
+        const adultLimit = assingedAdult >= totalAdult;
+        const childLimit = assingedChild >= totalChild;
         const disableIncrement = disableAllIncrement || isRoomFull;
         return (
           <section
@@ -99,7 +103,7 @@ const RoomAllocation: React.FC<RoomAllocationProps> = ({
               <CustomInputNumber
                 name="adult"
                 value={room.adult}
-                disabledIncrement={disableIncrement}
+                disabledIncrement={disableIncrement || adultLimit}
                 onChange={(e) => {
                   onChange &&
                   onChange(
@@ -108,6 +112,7 @@ const RoomAllocation: React.FC<RoomAllocationProps> = ({
                         return {
                           ...room,
                           adult: Number(e.target.value),
+                          price: room.roomPrice + Number(e.target.value) * room.adultPrice + room.child * room.childPrice
                         };
                       } else {
                         return room;
@@ -124,7 +129,7 @@ const RoomAllocation: React.FC<RoomAllocationProps> = ({
               <CustomInputNumber
                 name="child"
                 value={room.child}
-                disabledIncrement={disableIncrement}
+                disabledIncrement={disableIncrement || childLimit}
                 onChange={(e) => {
                   onChange &&
                     onChange(
@@ -133,6 +138,7 @@ const RoomAllocation: React.FC<RoomAllocationProps> = ({
                           return {
                             ...room,
                             child: Number(e.target.value),
+                            price: room.roomPrice + room.adult * room.adultPrice + Number(e.target.value) * room.childPrice,
                           };
                         } else {
                           return room;

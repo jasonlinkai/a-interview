@@ -1,10 +1,8 @@
-// components/CustomInputNumber.test.js
 import React from "react";
 import { render, cleanup, screen, fireEvent } from "@testing-library/react";
 import CustomInputNumber, {
   testIds,
 } from "@/components/molecules/CustomInputNumber";
-import { describe } from "node:test";
 
 const defaultProps = Object.freeze({
   max: 100,
@@ -14,7 +12,7 @@ const defaultProps = Object.freeze({
   name: "custom_input_number_name",
 });
 
-describe("test props of CustomInputNumber", () => {
+describe("test CustomInputNumber", () => {
   beforeEach(() => {
     render(
       <CustomInputNumber
@@ -219,10 +217,10 @@ describe("test props of CustomInputNumber", () => {
     cleanup();
     let eventTargetName;
     let eventTargetValue;
-    const onBlur = jest.fn((e: React.FocusEvent<HTMLInputElement>) => {
-      eventTargetName = e.target.name;
-      eventTargetValue = e.target.value;
-    });
+    const onBlur = (e: React.FocusEvent, name: string, value: string) => {
+      eventTargetName = name;
+      eventTargetValue = value;
+    };
     render(
       <CustomInputNumber
         max={defaultProps.max}
