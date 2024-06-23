@@ -4,13 +4,14 @@ export interface GuestDescription {
 }
 
 export interface RoomDescription {
+  id: number;
   roomPrice: number;
   adultPrice: number;
   childPrice: number;
   capacity: number;
 }
 
-export interface RoomDetail {
+export interface RoomDetail extends RoomDescription {
   adult: number;
   child: number;
   price: number;
@@ -20,7 +21,7 @@ export interface DpCell {
   adult: number;
   child: number;
   price: number;
-  allocation: { roomIndex?: number; adult: number; child: number }[];
+  allocation: Omit<DpCell, "allocation" | "price">[];
 }
 
 export const getDefaultRoomAllocation = (
@@ -85,7 +86,6 @@ export const getDefaultRoomAllocation = (
                 (alloc, index) =>
                   index === i
                     ? {
-                        roomIndex: i,
                         adult: adultsInRoom,
                         child: childrenInRoom,
                       }
@@ -97,17 +97,19 @@ export const getDefaultRoomAllocation = (
       }
     }
   }
-
-  const allocation = dp[adult][child].allocation;
-  return allocation.map((alloc) => {
-    const roomDescription = roomDescriptions[(alloc.roomIndex as number)];
+  return dp[adult][child].allocation.map((alloc, index) => {
+    const roomDescription = roomDescriptions[index];
+    const price =
+      alloc.adult + alloc.child > 0
+        ? roomDescription.roomPrice +
+          alloc.adult * roomDescription.adultPrice +
+          alloc.child * roomDescription.childPrice
+        : 0;
     return {
+      ...roomDescription,
       adult: alloc.adult,
       child: alloc.child,
-      price: roomDescription ?
-        roomDescription.roomPrice +
-        alloc.adult * roomDescription.adultPrice +
-        alloc.child * roomDescription.childPrice : 0,
+      price,
     };
   });
 };

@@ -1,5 +1,5 @@
 "use client";
-import React, { InputHTMLAttributes, useRef, useState } from "react";
+import React, { InputHTMLAttributes, useMemo, useRef, useState } from "react";
 import clsx from "clsx";
 import styles from "./CustomInputNumber.module.scss";
 import LongPressDiv from "@/components/atoms/LongPressDiv";
@@ -15,6 +15,8 @@ interface CustomInputNumberProps
   max?: number;
   min?: number;
   step?: number;
+  disabledIncrement?: boolean,
+  disabledDecrement?: boolean,
   onBlur?: (e: React.FocusEvent, name: string, value: string) => void;
   onChange?: (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -29,6 +31,8 @@ const CustomInputNumber: React.FC<CustomInputNumberProps> = ({
   max = Infinity,
   min = 0,
   value = 0,
+  disabledIncrement = false,
+  disabledDecrement = false,
   onBlur,
   onChange,
   ...rest
@@ -40,8 +44,7 @@ const CustomInputNumber: React.FC<CustomInputNumberProps> = ({
   const [inputValue, setInputValue] = useState(Number(value) || 0);
 
   const handleIncrement = () => {
-    console.log('handleIncrement');
-    if (disabled) return;
+    if (disabled || disabledIncrement) return;
     if (inputRef.current) {
       const newValue = inputValue + step > max ? max : inputValue + step;
       const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
@@ -55,7 +58,7 @@ const CustomInputNumber: React.FC<CustomInputNumberProps> = ({
   };
 
   const handleDecrement = () => {
-    if (disabled) return;
+    if (disabled || disabledDecrement) return;
     if (inputRef.current) {
       const newValue = inputValue - step < min ? min : inputValue - step;
       const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
@@ -93,7 +96,6 @@ const CustomInputNumber: React.FC<CustomInputNumberProps> = ({
       return;
     }
     if (inputRef.current) {
-      console.log("hanldeBlur", inputRef.current.name, inputRef.current.value);
       onBlur && onBlur(event, inputRef.current.name, inputRef.current.value);
     }
   };
@@ -118,10 +120,10 @@ const CustomInputNumber: React.FC<CustomInputNumberProps> = ({
           className={clsx([
             styles.controlButton,
             {
-              [styles.controlButtonDisabled]: disabled || inputValue <= min,
+              [styles.controlButtonDisabled]: disabled || disabledDecrement || inputValue <= min,
             },
           ])}
-          onClick={disabled ? void 0 : handleDecrement}
+          onClick={disabled || disabledDecrement || inputValue <= min ? void 0 : handleDecrement}
           disabled={inputValue <= min}
         >
           -
@@ -150,10 +152,10 @@ const CustomInputNumber: React.FC<CustomInputNumberProps> = ({
           className={clsx([
             styles.controlButton,
             {
-              [styles.controlButtonDisabled]: disabled || inputValue >= max,
+              [styles.controlButtonDisabled]: disabled || disabledIncrement || inputValue >= max,
             },
           ])}
-          onClick={disabled ? void 0 : handleIncrement}
+          onClick={disabled || disabledIncrement ? void 0 : handleIncrement}
           disabled={inputValue >= max}
         >
           +

@@ -1,6 +1,8 @@
 $border: #e5e5e5;
 $input-border: #c5c5c5;
 $primary: #3eb1f4;
+$primary-lighter: #bae4fd;
+$primary-lighter-border: #85cef9;
 $disabled: #dadada;
 $text: #333;
 $text-lighter: #9b9a9a;
@@ -12,6 +14,8 @@ $gap3: 16px;
   border: $border;
   inputBorder: $border;
   primary: $primary;
+  primaryLighter: $primary-lighter;
+  primaryLighterBorder: $primary-lighter-border;
   disabled: $disabled;
   text: $text;
   textLighter: $text-lighter;

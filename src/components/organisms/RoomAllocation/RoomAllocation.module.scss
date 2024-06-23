@@ -9,8 +9,18 @@
 
 .roomAllocationHeader {
   font-weight: bold;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   color: $text;
+  margin-bottom: $gap3;
+}
+
+.roomAllocationDetails {
+  padding: $gap3;
+  margin-bottom: $gap3;
+  background-color: $primary-lighter;
+  border: 2px solid $primary-lighter-border;
+  color: $text;
+  border-radius: $gap1;
 }
 
 .sectionWrap {
@@ -23,7 +33,7 @@
 
 .sectionHeader {
   font-weight: 500;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   color: $text;
   margin-bottom: $gap3;
 }
