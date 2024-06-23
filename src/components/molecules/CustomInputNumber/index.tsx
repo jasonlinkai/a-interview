@@ -23,36 +23,53 @@ const CustomInputNumber: React.FC<CustomInputNumberProps> = ({ ...rest }) => {
     max = Infinity,
     min = -Infinity,
     value = 0,
+    onChange,
   } = rest;
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const decrementButtonRef = useRef<HTMLButtonElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const incrementButtonRef = useRef<HTMLButtonElement>(null);
   const [inputValue, setInputValue] = useState(Number(value) || 0);
 
   const handleIncrement = () => {
+    if (disabled) return;
     if (inputRef.current) {
-      const newValue = inputValue + step;
-      if (newValue <= max) {
-        const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
-          window.HTMLInputElement.prototype,
-          "value"
-        )?.set;
-        nativeInputValueSetter?.call(inputRef.current, newValue);
-        const event = new Event("input", { bubbles: true });
-        inputRef.current.dispatchEvent(event);
-      }
+      const newValue = inputValue + step > max ? max : inputValue + step;
+      const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+        window.HTMLInputElement.prototype,
+        "value"
+      )?.set;
+      nativeInputValueSetter?.call(inputRef.current, newValue);
+      const event = new Event("input", { bubbles: true });
+      inputRef.current.dispatchEvent(event);
     }
   };
 
   const handleDecrement = () => {
+    if (disabled) return;
     if (inputRef.current) {
-      const newValue = inputValue - step;
-      if (newValue >= min) {
-        const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
-          window.HTMLInputElement.prototype,
-          "value"
-        )?.set;
-        nativeInputValueSetter?.call(inputRef.current, newValue);
-        const event = new Event("input", { bubbles: true });
-        inputRef.current.dispatchEvent(event);
+      const newValue = inputValue - step < min ? min : inputValue - step;
+      const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+        window.HTMLInputElement.prototype,
+        "value"
+      )?.set;
+      nativeInputValueSetter?.call(inputRef.current, newValue);
+      const event = new Event("input", { bubbles: true });
+      inputRef.current.dispatchEvent(event);
+    }
+  };
+
+  const hanldeBlur = (event: React.FocusEvent) => {
+    if (
+      !(
+        event.nativeEvent.target === inputRef.current ||
+        event.nativeEvent.target === decrementButtonRef.current ||
+        event.nativeEvent.target === incrementButtonRef.current
+      )
+    ) {
+      if (inputRef.current) {
+        inputRef.current.focus();
+        inputRef.current.blur();
       }
     }
   };
@@ -65,8 +82,8 @@ const CustomInputNumber: React.FC<CustomInputNumberProps> = ({ ...rest }) => {
       newValue = max;
     }
     setInputValue(newValue);
-    rest?.onChange &&
-      rest.onChange({
+    onChange &&
+      onChange({
         ...event,
         target: {
           ...event.target,
@@ -77,9 +94,20 @@ const CustomInputNumber: React.FC<CustomInputNumberProps> = ({ ...rest }) => {
   };
 
   return (
-    <div className={styles.customInputWrap}>
+    <div
+      ref={wrapperRef}
+      className={styles.customInputWrap}
+      tabIndex={0}
+      onBlur={hanldeBlur}
+    >
       <LongPressDiv onLongPress={handleDecrement}>
         <button
+          onFocus={() => {
+            if (wrapperRef.current) {
+              wrapperRef.current.focus();
+            }
+          }}
+          ref={decrementButtonRef}
           data-testid={testIds.decrementButton}
           className={clsx([
             styles.controlButton,
@@ -101,9 +129,16 @@ const CustomInputNumber: React.FC<CustomInputNumberProps> = ({ ...rest }) => {
         {...rest}
         value={inputValue}
         onChange={handleChange}
+        disabled={disabled}
       />
       <LongPressDiv onLongPress={handleIncrement}>
         <button
+          onFocus={() => {
+            if (wrapperRef.current) {
+              wrapperRef.current.focus();
+            }
+          }}
+          ref={incrementButtonRef}
           data-testid={testIds.incrementButton}
           className={clsx([
             styles.controlButton,
