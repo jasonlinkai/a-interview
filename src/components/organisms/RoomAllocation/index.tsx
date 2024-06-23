@@ -1,13 +1,11 @@
 "use client";
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import styles from "@/components/organisms/RoomAllocation/RoomAllocation.module.scss";
 import {
   GuestDescription,
-  RoomDescription,
   RoomDetail,
 } from "@/utils/roomHelpers";
 import CustomInputNumber from "@/components/molecules/CustomInputNumber";
-import useTheme from "@/hooks";
 
 export const testIds = {};
 
